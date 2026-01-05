@@ -1,0 +1,1 @@
+SELECT title, cuisine FROM recipes;

@@ -12,13 +12,16 @@ DROP TABLE IF EXISTS Restaurants;
 DROP TABLE IF EXISTS Recipes;
 DROP TABLE IF EXISTS Ingredients;
 
+-- Problem faced with previous table: referencing Ingredients(ingredient_id) never got defined or loaded in script (meaningless)
+-- ingredient_id is redefined
 -- ================================================
 -- Table: Ingredients
 -- ================================================
 CREATE TABLE IF NOT EXISTS Ingredients (
-    `ingredient_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(255) NOT NULL UNIQUE
-) COMMENT 'Stores individual ingredients available for recipes.';
+ingredients_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(255) NOT NULL UNIQUE
+) COMMENT 'Stores all ingredients for each recipe';
+
 
 -- ================================================
 -- Table: Recipes
@@ -128,13 +131,14 @@ INSERT INTO RestaurantMenus (restaurant_id, recipe_id, price) VALUES
 (4, 4, 20.00),
 (5, 5, 8.50);
 
+-- charlie_black had a bad email not written correctly, now fixed with '@' instead of '.'
 -- Users
 INSERT INTO Users (username, email, password_hash) VALUES
 ('john_doe', 'jondoe@example.com', 'hashed_password_1'),
 ('jane_smith', 'janesmith@example.com', 'hashed_password_2'),
 ('alice_jones', 'alicejones@example.com', 'hashed_password_3'),
 ('bob_brown', 'bobbrown@example.com', 'hashed_password_4'),
-('charlie_black', 'charlieblack.example.com', 'hashed_password_5');
+('charlie_black', 'charlieblack@example.com', 'hashed_password_5');
 
 -- UserRatings
 INSERT INTO UserRatings (recipe_id, user_id, rating, review_text) VALUES
@@ -171,18 +175,38 @@ INSERT INTO Instructions (recipe_id, step_number, instruction_text) VALUES
 (5, 2, 'Pour into a greased pan and bake at 180°C / 350°F until a toothpick comes out clean (about 30–35 minutes).'),
 (5, 3, 'Let it cool, spread with chocolate frosting, slice, and enjoy!');
 
+-- Table was missing previously, now added
+-- Ingredients
+INSERT INTO Ingredients (name) VALUES
+('Spaghetti'),
+('Ground Beef'),
+('Tomato Sauce'),
+('Parmesan Cheese'),
+('Chicken'),
+('Onion'),
+('Garlic'),
+('Curry Powder'),
+('Coconut Milk'),
+('Romaine Lettuce'),
+('Caesar Dressing'),
+('Croutons'),
+('Taco Seasoning'),
+('Tortillas'),
+('Cheddar Cheese'),
+('Cake Mix'),
+('Eggs'),
+('Milk'),
+('Vegetable Oil'),
+('Chocolate Frosting');
+
+-- previous RecipeIngredients table show old recipes with ID's / replacing old data with new 
 -- RecipeIngredients
 INSERT INTO RecipeIngredients (recipe_id, ingredient_id, quantity) VALUES
-(1, 1, 2.5),
-(1, 2, 1.0),
-(1, 3, 0.5),
-(2, 4, 3.0),
-(2, 5, 1.5),
-(3, 6, 200.0),
-(3, 7, 50.0),
-(4, 8, 4.0),
-(4, 9, 2.0),
-(5, 10, 1.0);
+(1,1,200),(1,2,300),(1,3,150),(1,4,30),
+(2,5,300),(2,6,100),(2,7,10),(2,8,5),(2,9,200),
+(3,10,150),(3,11,50),(3,12,30),(3,4,20),
+(4,2,250),(4,13,5),(4,14,4),(4,10,50),(4,15,40),
+(5,16,1),(5,17,3),(5,18,200),(5,19,100),(5,20,150);
 
 -- restaurants
 INSERT INTO Restaurants (name, address, city, state, zip_code, phone, rating) VALUES

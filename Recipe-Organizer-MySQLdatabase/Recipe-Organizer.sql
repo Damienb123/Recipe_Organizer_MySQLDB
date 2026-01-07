@@ -151,21 +151,25 @@ INSERT INTO UserRatings (recipe_id, user_id, rating, review_text) VALUES
 (5, 1, 1, 'Did not enjoy this at all.');
 
 -- Instructions
+-- Instructions are now updated with improved accuracy per each recipe 
+-- Spotted inconsistencies with instructions not matching the assigned recipe during testing
+-- each recipe has a given quick easy 3 step process for completion
 INSERT INTO Instructions (recipe_id, step_number, instruction_text) VALUES
-(1, 1, 'Preheat the oven to 350 degrees F.'),
-(1, 2, 'Mix all ingredients in a bowl.'),
-(1, 3, 'Pour into a baking dish and bake for 30 minutes.'),
-(2, 1, 'Chop vegetables and set aside.'),
-(2, 2, 'Heat oil in a pan and sauté vegetables.'),
-(2, 3, 'Add spices and cook for another 5 minutes.');    
-(3, 1, 'Boil water in a pot.'),
-(3, 2, 'Add pasta and cook until al dente.'),
-(3, 3, 'Drain and mix with sauce.'),
-(4, 1, 'Grill chicken on medium heat.'),
-(4, 2, 'Season with salt and pepper.'),
-(4, 3, 'Cook for 6-7 minutes on each side.'),
-(5, 1, 'Blend all ingredients in a blender.'),
-(5, 2, 'Serve chilled with ice.');
+(1, 1, 'boil spaghetti in salted water until tender. Drain and set aside'),
+(1, 2, 'Cook ground beef with a little oil until browned.'),
+(1, 3, 'Add the spaghetti to the sauce, toss well, and top with grated parmesan cheese. Serve hot.'),
+(2, 1, 'In a pan, heat a little oil and cook chicken pieces until browned.'),
+(2, 2, 'Add chopped onion, garlic, and curry powder. Stir for a minute, then pour in coconut milk or tomato sauce..'),
+(2, 3, 'Let it gently simmer for 10–15 minutes until the chicken is cooked through and the sauce thickens.Serve hot with rice.'),    
+(3, 1, 'Wash and chop romaine lettuce.'),
+(3, 2, 'Toss lettuce with caesar dressing, cruotons, little grated parmesan cheese.'),
+(3, 3, 'Serve in a bowl.'),
+(4, 1, 'In a pan, cook ground beef with a little oil until browned. Drain excess fat if needed.'),
+(4, 2, 'Add taco seasoning (or salt, pepper, and a little chili powder) plus a splash of water. Let it simmer for 2–3 minutes.'),
+(4, 3, 'Spoon the beef into taco shells or tortillas and top with lettuce, cheese, and salsa. Serve and enjoy!'),
+(5, 1, 'In a bowl, stir together chocolate cake mix (or flour, sugar, cocoa powder) with eggs, milk, and oil until smooth.'),
+(5, 2, 'Pour into a greased pan and bake at 180°C / 350°F until a toothpick comes out clean (about 30–35 minutes).'),
+(5, 3, 'Let it cool, spread with chocolate frosting, slice, and enjoy!');
 
 -- RecipeIngredients
 INSERT INTO RecipeIngredients (recipe_id, ingredient_id, quantity) VALUES

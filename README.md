@@ -26,3 +26,4 @@ Database designed for a growing online platform that connects home cooks, food e
 
 # Continuing Progress - From completed class project
 - Create scenario based queries for SQL practice stored in the scenario_based_queries directory
+- Updating database tables focusing on accuracy of data per table following the kinds of steps taken creating each recipe

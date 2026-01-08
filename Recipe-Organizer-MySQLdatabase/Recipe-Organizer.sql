@@ -29,7 +29,7 @@ name VARCHAR(255) NOT NULL UNIQUE
 CREATE TABLE IF NOT EXISTS Recipes (
  `recipe_id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
  `title` varchar(500) NOT NULL,
- `discription` text DEFAULT NULL,
+ `description` text DEFAULT NULL,
  `category` varchar(500) NOT NULL,
  `cuisine` varchar(500) NOT NULL,
  `cooking_time` int NOT NULL,
@@ -217,7 +217,7 @@ INSERT INTO Restaurants (name, address, city, state, zip_code, phone, rating) VA
 ('Pizza Place', '654 Pizza Ln', 'Pizza Town', 'FL', '33101', '555-6789', 4.2);
 
 -- recipes
-INSERT INTO Recipes (title, discription, category, cuisine, cooking_time, difficulty) VALUES
+INSERT INTO Recipes (title, description, category, cuisine, cooking_time, difficulty) VALUES
 ('Spaghetti Bolognese', 'A classic Italian pasta dish with a rich meat sauce.', 'Pasta', 'Italian', 30, 'medium'),
 ('Chicken Curry', 'A spicy and flavorful chicken dish.', 'Curry', 'Indian', 45, 'hard'),
 ('Caesar Salad', 'A fresh salad with romaine lettuce and Caesar dressing.', 'Salad', 'American', 15, 'easy'),

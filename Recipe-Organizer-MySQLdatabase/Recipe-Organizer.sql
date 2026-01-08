@@ -12,16 +12,6 @@ DROP TABLE IF EXISTS Restaurants;
 DROP TABLE IF EXISTS Recipes;
 DROP TABLE IF EXISTS Ingredients;
 
--- Problem faced with previous table: referencing Ingredients(ingredient_id) never got defined or loaded in script (meaningless)
--- ingredient_id is redefined
--- ================================================
--- Table: Ingredients
--- ================================================
-CREATE TABLE IF NOT EXISTS Ingredients (
-ingredients_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-name VARCHAR(255) NOT NULL UNIQUE
-) COMMENT 'Stores all ingredients for each recipe';
-
 
 -- ================================================
 -- Table: Recipes
@@ -76,6 +66,16 @@ CREATE TABLE IF NOT EXISTS Instructions (
 ) COMMENT 'Stores the step-by-step instructions for each recipe.';
 
 -- ================================================
+-- Table: Ingredients
+-- ================================================
+-- execution error was provided as a broken table using ingredients_id 
+-- instead of ingredient_id | because of this, all foreign keys expect "ingredient_id"
+CREATE TABLE IF NOT EXISTS Ingredients (
+ingredient_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(255) NOT NULL UNIQUE
+) COMMENT 'Stores all ingredients for each recipe';
+
+-- ================================================
 -- Table: RecipeIngredients
 -- ================================================
 CREATE TABLE IF NOT EXISTS RecipeIngredients (
@@ -122,16 +122,25 @@ ALTER TABLE UserRatings ADD CONSTRAINT fk_userratings_users FOREIGN KEY (`user_i
 -- ================================================
 -- Data Insertion
 -- ================================================
+-- Reorganized data insertion per table following the correct order
+-- recipes
+-- while creating the Recipes table, "recipe_id" was missing while in the data insertion process
+-- for this, recipes have attached user reviews that can be readable with joined recipe_id's from UserRatings
+INSERT INTO Recipes (recipe_id, title, discription, category, cuisine, cooking_time, difficulty) VALUES
+(1, 'Spaghetti Bolognese', 'A classic Italian pasta dish with a rich meat sauce.', 'Pasta', 'Italian', 30, 'medium'),
+(2, 'Chicken Curry', 'A spicy and flavorful chicken dish.', 'Curry', 'Indian', 45, 'hard'),
+(3, 'Caesar Salad', 'A fresh salad with romaine lettuce and Caesar dressing.', 'Salad', 'American', 15, 'easy'),
+(4, 'Beef Tacos', 'Tasty tacos filled with seasoned beef and toppings.', 'Tacos', 'Mexican', 20, 'easy'),
+(5, 'Chocolate Cake', 'A rich and moist chocolate cake.', 'Dessert', 'American', 60, 'hard');
 
--- RestaruantMenus
-INSERT INTO RestaurantMenus (restaurant_id, recipe_id, price) VALUES
-(1, 1, 12.99),
-(2, 2, 15.50),
-(3, 3, 10.00),
-(4, 4, 20.00),
-(5, 5, 8.50);
+-- restaurants
+INSERT INTO Restaurants (name, address, city, state, zip_code, phone, rating) VALUES
+('Pasta Palace', '123 Noodle St', 'Pasta City', 'NY', '10001', '555-1234', 4.5),
+('Burger Barn', '456 Burger Ave', 'Burger Town', 'CA', '90001', '555-5678', 4.0),
+('Sushi Spot', '789 Sushi Rd', 'Sushi City', 'WA', '98001', '555-8765', 4.8),
+('Taco Town', '321 Taco Blvd', 'Taco City', 'TX', '73301', '555-4321', 3.9),
+('Pizza Place', '654 Pizza Ln', 'Pizza Town', 'FL', '33101', '555-6789', 4.2);
 
--- charlie_black had a bad email not written correctly, now fixed with '@' instead of '.'
 -- Users
 INSERT INTO Users (username, email, password_hash) VALUES
 ('john_doe', 'jondoe@example.com', 'hashed_password_1'),
@@ -140,42 +149,6 @@ INSERT INTO Users (username, email, password_hash) VALUES
 ('bob_brown', 'bobbrown@example.com', 'hashed_password_4'),
 ('charlie_black', 'charlieblack@example.com', 'hashed_password_5');
 
--- UserRatings
-INSERT INTO UserRatings (recipe_id, user_id, rating, review_text) VALUES
-(1, 1, 5, 'Absolutely loved this recipe!'),
-(2, 2, 4, 'Very good but could use more spices.'),
-(3, 3, 3, 'It was okay, nothing special.'),
-(4, 4, 2, 'Did not like it at all.'),
-(5, 5, 1, 'Terrible recipe! Would not recommend.');
-
-(1, 2, 5, 'Best recipe ever!'),
-(2, 3, 4, 'Tasty and easy to make.'),
-(3, 4, 3, 'Average recipe.'),
-(4, 5, 2, 'Not my favorite.'),
-(5, 1, 1, 'Did not enjoy this at all.');
-
--- Instructions
--- Instructions are now updated with improved accuracy per each recipe 
--- Spotted inconsistencies with instructions not matching the assigned recipe during testing
--- each recipe has a given quick easy 3 step process for completion
-INSERT INTO Instructions (recipe_id, step_number, instruction_text) VALUES
-(1, 1, 'boil spaghetti in salted water until tender. Drain and set aside'),
-(1, 2, 'Cook ground beef with a little oil until browned.'),
-(1, 3, 'Add the spaghetti to the sauce, toss well, and top with grated parmesan cheese. Serve hot.'),
-(2, 1, 'In a pan, heat a little oil and cook chicken pieces until browned.'),
-(2, 2, 'Add chopped onion, garlic, and curry powder. Stir for a minute, then pour in coconut milk or tomato sauce..'),
-(2, 3, 'Let it gently simmer for 10–15 minutes until the chicken is cooked through and the sauce thickens.Serve hot with rice.'),    
-(3, 1, 'Wash and chop romaine lettuce.'),
-(3, 2, 'Toss lettuce with caesar dressing, cruotons, little grated parmesan cheese.'),
-(3, 3, 'Serve in a bowl.'),
-(4, 1, 'In a pan, cook ground beef with a little oil until browned. Drain excess fat if needed.'),
-(4, 2, 'Add taco seasoning (or salt, pepper, and a little chili powder) plus a splash of water. Let it simmer for 2–3 minutes.'),
-(4, 3, 'Spoon the beef into taco shells or tortillas and top with lettuce, cheese, and salsa. Serve and enjoy!'),
-(5, 1, 'In a bowl, stir together chocolate cake mix (or flour, sugar, cocoa powder) with eggs, milk, and oil until smooth.'),
-(5, 2, 'Pour into a greased pan and bake at 180°C / 350°F until a toothpick comes out clean (about 30–35 minutes).'),
-(5, 3, 'Let it cool, spread with chocolate frosting, slice, and enjoy!');
-
--- Table was missing previously, now added
 -- Ingredients
 INSERT INTO Ingredients (name) VALUES
 ('Spaghetti'),
@@ -199,7 +172,24 @@ INSERT INTO Ingredients (name) VALUES
 ('Vegetable Oil'),
 ('Chocolate Frosting');
 
--- previous RecipeIngredients table show old recipes with ID's / replacing old data with new 
+-- Instructions
+INSERT INTO Instructions (recipe_id, step_number, instruction_text) VALUES
+(1, 1, 'boil spaghetti in salted water until tender. Drain and set aside'),
+(1, 2, 'Cook ground beef with a little oil until browned.'),
+(1, 3, 'Add the spaghetti to the sauce, toss well, and top with grated parmesan cheese. Serve hot.'),
+(2, 1, 'In a pan, heat a little oil and cook chicken pieces until browned.'),
+(2, 2, 'Add chopped onion, garlic, and curry powder. Stir for a minute, then pour in coconut milk or tomato sauce..'),
+(2, 3, 'Let it gently simmer for 10–15 minutes until the chicken is cooked through and the sauce thickens.Serve hot with rice.'),    
+(3, 1, 'Wash and chop romaine lettuce.'),
+(3, 2, 'Toss lettuce with caesar dressing, cruotons, little grated parmesan cheese.'),
+(3, 3, 'Serve in a bowl.'),
+(4, 1, 'In a pan, cook ground beef with a little oil until browned. Drain excess fat if needed.'),
+(4, 2, 'Add taco seasoning (or salt, pepper, and a little chili powder) plus a splash of water. Let it simmer for 2–3 minutes.'),
+(4, 3, 'Spoon the beef into taco shells or tortillas and top with lettuce, cheese, and salsa. Serve and enjoy!'),
+(5, 1, 'In a bowl, stir together chocolate cake mix (or flour, sugar, cocoa powder) with eggs, milk, and oil until smooth.'),
+(5, 2, 'Pour into a greased pan and bake at 180°C / 350°F until a toothpick comes out clean (about 30–35 minutes).'),
+(5, 3, 'Let it cool, spread with chocolate frosting, slice, and enjoy!');
+
 -- RecipeIngredients
 INSERT INTO RecipeIngredients (recipe_id, ingredient_id, quantity) VALUES
 (1,1,200),(1,2,300),(1,3,150),(1,4,30),
@@ -208,22 +198,27 @@ INSERT INTO RecipeIngredients (recipe_id, ingredient_id, quantity) VALUES
 (4,2,250),(4,13,5),(4,14,4),(4,10,50),(4,15,40),
 (5,16,1),(5,17,3),(5,18,200),(5,19,100),(5,20,150);
 
--- restaurants
-INSERT INTO Restaurants (name, address, city, state, zip_code, phone, rating) VALUES
-('Pasta Palace', '123 Noodle St', 'Pasta City', 'NY', '10001', '555-1234', 4.5),
-('Burger Barn', '456 Burger Ave', 'Burger Town', 'CA', '90001', '555-5678', 4.0),
-('Sushi Spot', '789 Sushi Rd', 'Sushi City', 'WA', '98001', '555-8765', 4.8),
-('Taco Town', '321 Taco Blvd', 'Taco City', 'TX', '73301', '555-4321', 3.9),
-('Pizza Place', '654 Pizza Ln', 'Pizza Town', 'FL', '33101', '555-6789', 4.2);
+-- RestaruantMenus
+INSERT INTO RestaurantMenus (restaurant_id, recipe_id, price) VALUES
+(1, 1, 12.99),
+(2, 2, 15.50),
+(3, 3, 10.00),
+(4, 4, 20.00),
+(5, 5, 8.50);
 
--- recipes
-INSERT INTO Recipes (title, discription, category, cuisine, cooking_time, difficulty) VALUES
-('Spaghetti Bolognese', 'A classic Italian pasta dish with a rich meat sauce.', 'Pasta', 'Italian', 30, 'medium'),
-('Chicken Curry', 'A spicy and flavorful chicken dish.', 'Curry', 'Indian', 45, 'hard'),
-('Caesar Salad', 'A fresh salad with romaine lettuce and Caesar dressing.', 'Salad', 'American', 15, 'easy'),
-('Beef Tacos', 'Tasty tacos filled with seasoned beef and toppings.', 'Tacos', 'Mexican', 20, 'easy'),
-('Chocolate Cake', 'A rich and moist chocolate cake.', 'Dessert', 'American', 60, 'hard');
-
+-- UserRatings
+INSERT INTO UserRatings (recipe_id, user_id, rating, review_text) VALUES
+(1, 1, 5, 'Absolutely loved this recipe!'),
+(2, 2, 4, 'Very good but could use more spices.'),
+(3, 3, 3, 'It was okay, nothing special.'),
+(4, 4, 2, 'Did not like it at all.'),
+(5, 5, 1, 'Terrible recipe! Would not recommend.'),
+(1, 2, 5, 'Best recipe ever!'),
+(2, 3, 4, 'Tasty and easy to make.'),
+(3, 4, 3, 'Average recipe.'),
+(4, 5, 2, 'Not my favorite.'),
+(5, 1, 1, 'Did not enjoy this at all.');
 -- ================================================
 -- End of script
 -- ================================================
+

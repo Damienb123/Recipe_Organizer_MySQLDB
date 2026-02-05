@@ -1,21 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const ratesController = require('../controllers/ratesController');
+const ratingsController = require('../controllers/ratesController');
 
 // Route to get average rating for a recipe
-router.get('/', ratesController.getAllRatings);
+router.get('/', ratingsController.getAllRatings);
 
-router.get('/search', ratesController.getRatings);
+router.get('/search', ratingsController.getRatings);
 
-router.get('/id', ratesController.getARatingId);
+router.get('/:id', ratingsController.getARatingId);
 
 // Route to post a new rating for a recipe
-router.post('/', ratesController.createRating);
+router.post('/', ratingsController.createRating);
 
 // Route to update an existing rating for a recipe
-router.put('/id', ratesController.udpateRating)
+router.put('/id', ratingsController.updateRating)
 
 // Route to delete a rating for a recipe
-router.delete('/id', ratingController.deleteRating);
+router.delete('/id', ratingsController.deleteRating);
 
 module.exports = router;
